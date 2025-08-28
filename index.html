@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>واجهة شات بوت — Ahmed</title>
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* لإخفاء شريط تمرير الإطار على بعض المتصفحات */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800">
+  <!-- شريط علوي -->
+  <header class="sticky top-0 z-30 bg-white/80 backdrop-blur border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-2xl bg-slate-900 text-white grid place-items-center font-bold">A</div>
+        <h1 class="text-lg font-semibold">Ahmed — واجهة شات بوت</h1>
+      </div>
+      <nav class="flex items-center gap-2 text-sm">
+        <a href="#inline" class="px-3 py-1.5 rounded-xl hover:bg-slate-100">الشات داخل الصفحة</a>
+        <button id="open-floating" class="px-3 py-1.5 rounded-xl bg-slate-900 text-white hover:opacity-90">افتح الشات العام</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- الحاوية الرئيسية -->
+  <main class="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- لوحة المعلومات -->
+    <aside class="lg:col-span-4">
+      <section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+        <h2 class="text-base font-semibold mb-3">إعداد سريع</h2>
+        <ol class="list-decimal list-inside space-y-2 text-sm leading-6">
+          <li>هذا الملف يحتوي على <strong>شات مدمج</strong> عبر <strong>Chatbase</strong> + زر <strong>شات عائم</strong>.</li>
+          <li>استبدل <span class="font-mono bg-slate-100 px-1 rounded">BOT_ID</span> بمعرّف البوت الخاص بك إذا تغيّر.</li>
+          <li>ارفع الملف على أي استضافة .</li>
+        </ol>
+        <div class="mt-4 p-3 rounded-xl bg-slate-50 border text-xs">
+          <p class="font-semibold mb-1">ملاحظات:</p>
+          <ul class="list-disc list-inside space-y-1">
+            <li>العنصر المضمّن بالأسفل هو <span class="font-semibold">iframe</span> رسمي من Chatbase.</li>
+            <li>زر "افتح الشات العائم" يشغّل الودجت المنبثق الخاص بـ Chatbase.</li>
+            <li>يمكنك تعديل الألوان والتخطيط كما تحب—الستايل من TailwindCSS.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm mt-6">
+        <h3 class="text-base font-semibold mb-3">تخصيص سريع للألوان</h3>
+        <div class="flex items-center gap-3 text-sm">
+          <label class="shrink-0">لون الشريط:</label>
+          <input id="brandColor" type="color" value="#0f172a" class="h-9 w-14 border rounded-md"/>
+          <button id="applyBrand" class="px-3 py-1.5 rounded-xl bg-slate-900 text-white hover:opacity-90">تطبيق</button>
+        </div>
+      </section>
+    </aside>
+
+    <!-- الشات المضمّن -->
+    <section id="inline" class="lg:col-span-8">
+      <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+        <div id="chatHeader" class="px-4 py-3 border-b flex items-center justify-between" style="background:#0f172a; color:#fff">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-white/20 grid place-items-center">💬</div>
+            <h2 class="font-semibold">المساعد الذكي</h2>
+          </div>
+          <span class="text-xs opacity-90">مدعوم بواسطة Chatbase</span>
+        </div>
+        <!-- IFRAME Chatbase (Inline) -->
+        <div class="aspect-[9/14] md:aspect-[16/10] w-full">
+          <iframe
+            id="chatbase-iframe"
+            src="https://www.chatbase.co/chatbot-iframe/3qdF0Lj9BtAhU6yUfhps9" 
+            title="Chatbase Inline Chatbot"
+            class="w-full h-full no-scrollbar"
+            frameborder="0"
+            allow="clipboard-read; clipboard-write"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Chatbase Floating Widget Embed (يوفّر زر عائم جاهز) -->
+  <script>
+    (function(){
+      if(!window.chatbase || window.chatbase("getState") !== "initialized"){
+        window.chatbase = (...arguments)=>{ if(!window.chatbase.q){ window.chatbase.q=[] } window.chatbase.q.push(arguments) };
+        window.chatbase = new Proxy(window.chatbase, { get(target, prop){ if(prop === "q"){ return target.q } return (...args)=>target(prop, ...args) } });
+      }
+      const onLoad = function(){
+        const script = document.createElement("script");
+        script.src = "https://www.chatbase.co/embed.min.js";
+        script.id = "3qdF0Lj9BtAhU6yUfhps9"; // إبقِ نفس المعرف الخاص بك
+        script.domain = "www.chatbase.co";
+        document.body.appendChild(script);
+      };
+      if(document.readyState === "complete"){ onLoad() } else { window.addEventListener("load", onLoad) }
+    })();
+  </script>
+
+  <!-- تحكم بسيط: فتح الودجت العائم + تخصيص لون الهيدر -->
+  <script>
+    // فتح الودجت العائم
+    document.getElementById('open-floating').addEventListener('click', () => {
+      try {
+        window.chatbase('open');
+      } catch(e) {
+        alert('لم يتم تحميل ودجت Chatbase بعد. جرّب بعد ثانية.');
+      }
+    });
+
+    // تخصيص لون ترويسة الشات المضمّن
+    document.getElementById('applyBrand').addEventListener('click', () => {
+      const color = document.getElementById('brandColor').value;
+      const header = document.getElementById('chatHeader');
+      header.style.background = color;
+      header.style.color = '#fff';
+    });
+  </script>
+</body>
+</html>
